@@ -262,6 +262,12 @@
         answer: 'A'
       },
     ]
+    function randomQuestion() {
+      for (let i = inputQuestion.length -1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [inputQuestion[i],inputQuestion[j]] = [inputQuestion[j], inputQuestion[i]];
+      }
+    }
     function updateTimer() {
       if (timeLeft > 0) {
         document.getElementById("disp").innerHTML = `<div class="text-success" style="font-size: 50px;">Score:$${userScore}</div>  Time Left: ${timeLeft} Seconds`
@@ -343,6 +349,7 @@
       }
     }
 
+    randomQuestion();
     loadQuestion();
 
   </script>
