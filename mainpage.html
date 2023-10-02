@@ -262,41 +262,50 @@
         answer: 'A'
       },
     ]
-    function randomQuestion() {
-      for (let i = inputQuestion.length -1; i > 0; i--) {
+    function shuffleQuestions() {
+      for (let i = inputQuestion.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [inputQuestion[i],inputQuestion[j]] = [inputQuestion[j], inputQuestion[i]];
+        [inputQuestion[i], inputQuestion[j]] = [inputQuestion[j], inputQuestion[i]];
       }
     }
+    function getNextQuestion() {
+      if (i < inputQuestion.length) {
+        return inputQuestion[i++];
+      } else {
+        return null;
+      }
+    }
+
     function updateTimer() {
       if (timeLeft > 0) {
-        document.getElementById("disp").innerHTML = `<div class="text-success" style="font-size: 50px;">Score:$${userScore}</div>  Time Left: ${timeLeft} Seconds`
+        document.getElementById("disp").innerHTML = `<div class="text-success" style="font-size: 50px;">$${userScore}</div> Time Left: ${timeLeft} seconds`;
         timeLeft--;
       } else {
-        mySong3.play();
         mySong.pause();
+        mySong3.play();
         if (!gameEnded) {
-          alert(`Time's up! Game over. Your score is $${userScore}`)
-          location.reload()
-          loadQuestion()
+          alert(`Time's up! Game Over. Your score is $${userScore}`);
+          location.reload();
+          loadQuestion();
         }
       }
     }
 
     function loadQuestion() {
-      if (i < inputQuestion.length) {
+      const nextQuestion = getNextQuestion();
+
+      if (nextQuestion) {
         timeLeft = 20;
         clearInterval(timer);
-        timer = setInterval(updateTimer, 1000)
-        updateTimer()
-        const currentQuestion = inputQuestion[i];
+        timer = setInterval(updateTimer, 1000);
+        updateTimer();
 
-        optA = currentQuestion.optionA
-        optB = currentQuestion.optionB
-        optC = currentQuestion.optionC
-        optD = currentQuestion.optionD
-        correctAnswer = currentQuestion.answer
-        const questionText = currentQuestion.question
+        optA = nextQuestion.optionA;
+        optB = nextQuestion.optionB;
+        optC = nextQuestion.optionC;
+        optD = nextQuestion.optionD;
+        correctAnswer = nextQuestion.answer;
+        const questionText = nextQuestion.question;
 
         document.getElementById("mainQuestion").textContent = questionText;
         document.getElementById("optA").textContent = optA;
@@ -304,8 +313,7 @@
         document.getElementById("optC").textContent = optC;
         document.getElementById("optD").textContent = optD;
 
-        mySong.play()
-        document.getElementById("load").style.display = "none";
+        mySong.play();
         document.getElementById("disp").style.display = "block";
         document.getElementById("label").style.display = "block";
 
@@ -313,45 +321,50 @@
         document.getElementById("optB").classList.remove("btn-success", "btn-danger");
         document.getElementById("optC").classList.remove("btn-success", "btn-danger");
         document.getElementById("optD").classList.remove("btn-success", "btn-danger");
-        gameEnded = false
-
-        // i++
+        gameEnded = false;
       } else {
         clearInterval(timer);
-        gameEnded = true
-        alert(`Congratulations! You have completed the game.Your score is $${userScore}`);
-        location.reload();
+        gameEnded = true;
+        document.getElementById("mainQuestion").textContent = `Congratulations! You have completed the Quiz!. Your score is $${userScore}`;
+        document.getElementById("optA").style.display = "none";
+        document.getElementById("optB").style.display = "none";
+        document.getElementById("optC").style.display = "none";
+        document.getElementById("optD").style.display = "none";
+        document.getElementById("disp").style.display = "none";
+        document.getElementById("label").style.display = "none";
       }
     }
+
     function checkAnswer(selectedOption) {
       clearInterval(timer);
-      if (selectedOption === correctAnswer) {
-        document.getElementById(`opt${selectedOption}`).classList.add("btn-success");
-        setTimeout(() => {
-          document.getElementById(`opt${selectedOption}`).classList.remove("btn-success");
-          loadQuestion()
-        }, 300);
-        mySong.pause()
-        mySong2.play();
-        userScore += 100;
-        document.getElementById("disp").innerHTML = `<div class="text-success" style="font-size: 50px;">Score:$${userScore}</div> Time Left: ${timeLeft} Seconds`;
 
-        i++;
-      } else {
-        mySong3.play();
-        mySong.pause();
-        document.getElementById(`opt${selectedOption}`).classList.add("btn-danger");
-        gameEnded = true
-        setTimeout(() => {
-          alert(`Wrong answer! Game Over. Your score is $${userScore} Restart`);
-          location.reload();
-        }, 400);
+      if (!gameEnded) {
+        if (selectedOption === correctAnswer) {
+          mySong2.play();
+          mySong.pause();
+          userScore += 100;
+          document.getElementById("disp").innerHTML = `<div class="text-success" style="font-size: 50px;">$${userScore}</div>`;
+          document.getElementById(`opt${selectedOption}`).classList.add("btn-success");
+          setTimeout(() => {
+            document.getElementById(`opt${selectedOption}`).classList.remove("btn-success");
+            loadQuestion()
+          }, 300);
+        } else {
+          mySong3.play();
+          mySong.pause();
+          document.getElementById(`opt${selectedOption}`).classList.add("btn-danger");
+          gameEnded = true;
+          setTimeout(() => {
+            alert(`Wrong answer! Game Over. Your score is $${userScore}`);
+            location.reload()
+            loadQuestion()
+          }, 400);
+        }
       }
     }
 
-    randomQuestion();
+    shuffleQuestions();
     loadQuestion();
-
   </script>
 </body>
 
