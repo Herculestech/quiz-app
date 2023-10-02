@@ -2,334 +2,350 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Game</title>
-    <link rel="stylesheet" href="https://cdn.usebootstrap.com/bootstrap/5.0.1/css/bootstrap.min.css">
-    <style>
-        body {
-            background-image: url(who_wants_to_be_a_millionaire_ep1_23_1.jpeg);
-            background-size: cover;
-            background-repeat: no-repeat;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Game</title>
+  <link rel="stylesheet" href="https://cdn.usebootstrap.com/bootstrap/5.0.1/css/bootstrap.min.css">
+  <style>
+    body {
+      background-image: url(who_wants_to_be_a_millionaire_ep1_23_1.jpeg);
+      background-size: cover;
+      background-repeat: no-repeat;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        .container {
-            position: absolute;
-            bottom: 0;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+    .container {
+      position: absolute;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
-        .question {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    .question {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-        .option {
-            text-align: center;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+    .option {
+      text-align: center;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
 
-        .btn-primary {
-            background-color: #007bff;
-            color: #fff;
-        }
+    .btn-primary {
+      background-color: #007bff;
+      color: #fff;
+    }
 
-        .btn-success {
-            background-color: limegreen;
-            color: #fff;
-        }
+    .btn-success {
+      background-color: limegreen;
+      color: #fff;
+    }
 
-        .btn-danger {
-            background-color: red;
-            color: #fff;
-        }
+    .btn-danger {
+      background-color: red;
+      color: #fff;
+    }
 
-        #label,
-        #disp {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-    </style>
+    #label,
+    #disp {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <!-- <label for="" class="text-success" id="label" style="font-size: 40px;">Score:</label> -->
-        <div id="disp"></div>
-        <div class="question" id="mainQuestion"></div>
-        <div class="options">
-            <button class="btn btn-primary option" id="optA" onclick="checkAnswer('A')"></button>
-            <button class="btn btn-primary option" id="optB" onclick="checkAnswer('B')"></button>
-            <button class="btn btn-primary option" id="optC" onclick="checkAnswer('C')"></button>
-            <button class="btn btn-primary option" id="optD" onclick="checkAnswer('D')"></button>
-        </div>
-        <div class="text-center">
-            <!-- <button onclick="loadQuestion()" class="btn btn-primary rounded-pill mt-3" id="load">Load Question</button> -->
-        </div>
+  <div class="container">
+    <!-- <label for="" class="text-success" id="label" style="font-size: 40px;">Score:</label> -->
+    <div id="disp"></div>
+    <div class="question" id="mainQuestion"></div>
+    <div class="options">
+      <button class="btn btn-primary option" id="optA" onclick="checkAnswer('A')"></button>
+      <button class="btn btn-primary option" id="optB" onclick="checkAnswer('B')"></button>
+      <button class="btn btn-primary option" id="optC" onclick="checkAnswer('C')"></button>
+      <button class="btn btn-primary option" id="optD" onclick="checkAnswer('D')"></button>
     </div>
-    <script>
-        let userScore = 0
-        let i = 0
-        let timer;
-        let timeLeft = 20;
-        let gameEnded = false
-    
-        var mySong = new Audio("sound_background.mp3")
-        var mySong2 = new Audio("sound_right.mp3")
-        var mySong3 = new Audio("sound_wrong.mp3")
-    
-        let optA, optB, optC, optD;
-        let correctAnswer;
-    
-        const inputQuestion = [
-          {
-            question: 'Free surface of a liquid behaves like a sheet and tends to contract to the smallest possible area due to the',
-            optionA: 'Force of adhesion',
-            optionB: 'Force of friction',
-            optionC: 'Centrifugal force',
-            optionD: 'Force of cohesion',
-            answer: 'D'
-          },
-          {
-            question: 'GNLF stands for',
-            optionA: 'Gorkha National Liberation Front',
-            optionB: 'Gross National Liberation Form',
-            optionC: 'Both option A and B',
-            optionD: 'None of the above',
-            answer: 'A'
-          },
-          {
-            question: 'Study at SQI, Succeed _______',
-            optionA: 'Anytime',
-            optionB: 'Anyhow',
-            optionC: 'Anywhere',
-            optionD: 'Accurately',
-            answer: 'C'
-          },
-          {
-            question: 'SQI has campuses in',
-            optionA: 'Ogbomoso, Ibadan, Lagos',
-            optionB: 'Ogbomoso,Osogbo, Abeokuta',
-            optionC: 'Abuja,Delta,Ibadan',
-            optionD: 'Ogbomoso,Ibadan',
-            answer: 'D'
-          },
-          {
-            question: 'SQI College of ICT offers all of these courses except ',
-            optionA: 'Robotics',
-            optionB: 'Graphics Design',
-            optionC: 'Software Developments',
-            optionD: 'Geology',
-            answer: 'D'
-          },
-          {
-            question: 'SQI has a President and a Founder. What is his name?',
-            optionA: 'Dr. Femi Adeyemi',
-            optionB: 'Dr. Adeyemi Adefemi',
-            optionC: 'Dr. Adeyemi Aderinto',
-            optionD: 'Dr.Femi Aderinto',
-            answer: 'D'
-          },
-          {
-            question: 'For safety, the fuse wire used in the mains for household supply of electricity must be made of metal having',
-            optionA: 'low melting point',
-            optionB: 'high resistance',
-            optionC: 'high melting point',
-            optionD: 'low specific heat',
-            answer: 'A'
-          },
-          {
-            question: 'During World War I Germany was defeated in the Battle of Verdun on the western front and Romania declared war on the eastern front in the year',
-            optionA: '1914 AD',
-            optionB: '1915 AD',
-            optionC: '1916 AD',
-            optionD: '1917 AD',
-            answer: 'C'
-          },
-          {
-            question: 'When is Nigeria independence day?',
-            optionA: 'October 1',
-            optionB: 'May 31',
-            optionC: 'December 10',
-            optionD: 'April 11',
-            answer: 'A'
-          }, 
-          {
-            question: 'Durand Cup is associated with the game of',
-            optionA: 'Cricket',
-            optionB: 'Football',
-            optionC: 'Hockey',
-            optionD: 'Volleyball',
-            answer: 'B'
-          },
-          {
-            question: '20th August is celebrated as',
-            optionA: 'Earth Day',
-            optionB: 'Sadbhavana Divas',
-            optionC: 'No Tobacco Day',
-            optionD: 'None of these',
-            answer: 'B'
-          },
-          {
-            question: 'When is the World Population Day observed?',
-            optionA: 'May 31',
-            optionB: 'October 4',
-            optionC: 'December 10',
-            optionD: 'July 11',
-            answer: 'D'
-          },
-          {
-            question: 'Who is Manchester United current captain?',
-            optionA: 'Luke Shaw',
-            optionB: 'Bruno Fernades',
-            optionC: 'Marcus Rashford',
-            optionD: 'Raheal Varane',
-            answer: 'B'
-          },
-          {
-            question: 'January 15 is celebrated as the',
-            optionA: 'Republic Day',
-            optionB: 'Ugadhi',
-            optionC: 'TeachersDay',
-            optionD: 'Army Day',
-            answer: 'D'
-          },
-          {
-            question: 'What is the capital of France?',
-            optionA: 'London',
-            optionB: 'Berlin',
-            optionC: 'Paris',
-            optionD: 'Madrid',
-            answer: 'C'
-          },
-          {
-            question: 'Which planet is known as the Red Planet?',
-            optionA: 'Venus',
-            optionB: 'Mars',
-            optionC: 'Jupiter',
-            optionD: 'Saturn',
-            answer: 'B'
-          },
-          {
-            question: 'What are three types of lasers?',
-            optionA: 'Gas, metal vapor, rock',
-            optionB: 'Pointer, diode CD',
-            optionC: 'Diode, inverted, pointer',
-            optionD: 'Gas, solid state, diode',
-            answer: 'D'
-          },
-          {
-            question: 'Compact discs, (according to the original CD specifications) hold how many minutes of music?',
-            optionA: '74 mins',
-            optionB: '56 mins',
-            optionC: '60 mins',
-            optionD: '90 mins',
-            answer: 'A'
-          },
-        ]
-        function updateTimer() {
-          if (timeLeft > 0) {
-            document.getElementById("disp").innerHTML = `<div class="text-success" style="font-size: 50px;">Score:$${userScore}</div>  Time Left: ${timeLeft} Seconds`
-            timeLeft--;
-          } else {
-            mySong3.play();
-            mySong.pause();
-            if (!gameEnded) {
-              alert(`Time's up! Game over. Your score is $${userScore}`)
-              location.reload()
-              loadQuestion()
-            }
-          }
+    <div class="text-center">
+      <!-- <button onclick="loadQuestion()" class="btn btn-primary rounded-pill mt-3" id="load">Load Question</button> -->
+    </div>
+  </div>
+  <script>
+    let userScore = 0
+    let i = 0
+    let timer;
+    let timeLeft = 20;
+    let gameEnded = false
+
+    var mySong = new Audio("sound_background.mp3")
+    var mySong2 = new Audio("sound_right.mp3")
+    var mySong3 = new Audio("sound_wrong.mp3")
+
+    let optA, optB, optC, optD;
+    let correctAnswer;
+
+    const inputQuestion = [
+      {
+        question: 'Free surface of a liquid behaves like a sheet and tends to contract to the smallest possible area due to the',
+        optionA: 'Force of adhesion',
+        optionB: 'Force of friction',
+        optionC: 'Centrifugal force',
+        optionD: 'Force of cohesion',
+        answer: 'D'
+      },
+      {
+        question: 'GNLF stands for',
+        optionA: 'Gorkha National Liberation Front',
+        optionB: 'Gross National Liberation Form',
+        optionC: 'Both option A and B',
+        optionD: 'None of the above',
+        answer: 'A'
+      },
+      {
+        question: 'Study at SQI, Succeed _______',
+        optionA: 'Anytime',
+        optionB: 'Anyhow',
+        optionC: 'Anywhere',
+        optionD: 'Accurately',
+        answer: 'C'
+      },
+      {
+        question: 'SQI has campuses in',
+        optionA: 'Ogbomoso, Ibadan, Lagos',
+        optionB: 'Ogbomoso,Osogbo, Abeokuta',
+        optionC: 'Abuja,Delta,Ibadan',
+        optionD: 'Ogbomoso,Ibadan',
+        answer: 'D'
+      },
+      {
+        question: 'SQI College of ICT offers all of these courses except ',
+        optionA: 'Robotics',
+        optionB: 'Graphics Design',
+        optionC: 'Software Developments',
+        optionD: 'Geology',
+        answer: 'D'
+      },
+      {
+        question: 'SQI has a President and a Founder. What is his name?',
+        optionA: 'Dr. Femi Adeyemi',
+        optionB: 'Dr. Adeyemi Adefemi',
+        optionC: 'Dr. Adeyemi Aderinto',
+        optionD: 'Dr.Femi Aderinto',
+        answer: 'D'
+      },
+      {
+        question: 'For safety, the fuse wire used in the mains for household supply of electricity must be made of metal having',
+        optionA: 'low melting point',
+        optionB: 'high resistance',
+        optionC: 'high melting point',
+        optionD: 'low specific heat',
+        answer: 'A'
+      },
+      {
+        question: 'During World War I Germany was defeated in the Battle of Verdun on the western front and Romania declared war on the eastern front in the year',
+        optionA: '1914 AD',
+        optionB: '1915 AD',
+        optionC: '1916 AD',
+        optionD: '1917 AD',
+        answer: 'C'
+      },
+      {
+        question: 'When is Nigeria independence day?',
+        optionA: 'October 1',
+        optionB: 'May 31',
+        optionC: 'December 10',
+        optionD: 'April 11',
+        answer: 'A'
+      },
+      {
+        question: 'Durand Cup is associated with the game of',
+        optionA: 'Cricket',
+        optionB: 'Football',
+        optionC: 'Hockey',
+        optionD: 'Volleyball',
+        answer: 'B'
+      },
+      {
+        question: 'What are the primary colors used in subtractive color mixing?',
+        optionA: 'Red, green, and blue',
+        optionB: 'Cyan, magenta, and yellow',
+        optionC: 'Yellow, magenta, and black',
+        optionD: 'Red, blue, and yellow',
+        answer: 'B'
+      },
+      {
+        question: '20th August is celebrated as',
+        optionA: 'Earth Day',
+        optionB: 'Sadbhavana Divas',
+        optionC: 'No Tobacco Day',
+        optionD: 'None of these',
+        answer: 'B'
+      },
+      {
+        question: 'When is the World Population Day observed?',
+        optionA: 'May 31',
+        optionB: 'October 4',
+        optionC: 'December 10',
+        optionD: 'July 11',
+        answer: 'D'
+      },
+      {
+        question: 'Who is Manchester United current captain?',
+        optionA: 'Luke Shaw',
+        optionB: 'Bruno Fernades',
+        optionC: 'Marcus Rashford',
+        optionD: 'Raheal Varane',
+        answer: 'B'
+      },
+      {
+        question: 'Which of the following are types of renewable energy sources?',
+        optionA: 'Oil and coal',
+        optionB: 'Wind and solar',
+        optionC: 'Natural gas and nuclear',
+        optionD: 'Hydrogen and diesel',
+        answer: 'B'
+      },
+      {
+        question: 'January 15 is celebrated as the',
+        optionA: 'Republic Day',
+        optionB: 'Ugadhi',
+        optionC: 'TeachersDay',
+        optionD: 'Army Day',
+        answer: 'D'
+      },
+      {
+        question: 'What is the capital of France?',
+        optionA: 'London',
+        optionB: 'Berlin',
+        optionC: 'Paris',
+        optionD: 'Madrid',
+        answer: 'C'
+      },
+      {
+        question: 'Which planet is known as the Red Planet?',
+        optionA: 'Venus',
+        optionB: 'Mars',
+        optionC: 'Jupiter',
+        optionD: 'Saturn',
+        answer: 'B'
+      },
+      {
+        question: 'What are three types of lasers?',
+        optionA: 'Gas, metal vapor, rock',
+        optionB: 'Pointer, diode CD',
+        optionC: 'Diode, inverted, pointer',
+        optionD: 'Gas, solid state, diode',
+        answer: 'D'
+      },
+      {
+        question: 'Compact discs, (according to the original CD specifications) hold how many minutes of music?',
+        optionA: '74 mins',
+        optionB: '56 mins',
+        optionC: '60 mins',
+        optionD: '90 mins',
+        answer: 'A'
+      },
+    ]
+    function updateTimer() {
+      if (timeLeft > 0) {
+        document.getElementById("disp").innerHTML = `<div class="text-success" style="font-size: 50px;">Score:$${userScore}</div>  Time Left: ${timeLeft} Seconds`
+        timeLeft--;
+      } else {
+        mySong3.play();
+        mySong.pause();
+        if (!gameEnded) {
+          alert(`Time's up! Game over. Your score is $${userScore}`)
+          location.reload()
+          loadQuestion()
         }
-    
-        function loadQuestion() {
-          if (i < inputQuestion.length) {
-            timeLeft = 20;
-            clearInterval(timer);
-            timer = setInterval(updateTimer, 1000)
-            updateTimer()
-            const currentQuestion = inputQuestion[i];
-    
-            optA = currentQuestion.optionA
-            optB = currentQuestion.optionB
-            optC = currentQuestion.optionC
-            optD = currentQuestion.optionD
-            correctAnswer = currentQuestion.answer
-            const questionText = currentQuestion.question
-    
-            document.getElementById("mainQuestion").textContent = questionText;
-            document.getElementById("optA").textContent = optA;
-            document.getElementById("optB").textContent = optB;
-            document.getElementById("optC").textContent = optC;
-            document.getElementById("optD").textContent = optD;
-    
-            mySong.play()
-            document.getElementById("load").style.display = "none";
-            document.getElementById("disp").style.display = "block";
-            document.getElementById("label").style.display = "block";
-    
-            document.getElementById("optA").classList.remove("btn-success", "btn-danger");
-            document.getElementById("optB").classList.remove("btn-success", "btn-danger");
-            document.getElementById("optC").classList.remove("btn-success", "btn-danger");
-            document.getElementById("optD").classList.remove("btn-success", "btn-danger");
-            gameEnded=false
-    
-            // i++
-          } else {
-                    clearInterval(timer);
-                    gameEnded = true
-                    alert(`Congratulations! You have completed the game.Your score is $${userScore}`);
-                    location.reload();
-                }
-        }
-        function checkAnswer(selectedOption) {
-          clearInterval(timer);
-                if (selectedOption === correctAnswer) {
-                    document.getElementById(`opt${selectedOption}`).classList.add("btn-success");
-                    setTimeout(() => {
-                        document.getElementById(`opt${selectedOption}`).classList.remove("btn-success");
-                        loadQuestion()
-                    }, 300);
-                    mySong.pause()
-                    mySong2.play();
-                    userScore += 100;
-                    document.getElementById("disp").innerHTML = `<div class="text-success" style="font-size: 50px;">Score:$${userScore}</div> Time Left: ${timeLeft} Seconds`;
-    
-                    i++;
-                } else {
-                    mySong3.play();
-                    mySong.pause();
-                    document.getElementById(`opt${selectedOption}`).classList.add("btn-danger");
-                    gameEnded = true
-                    setTimeout(() => {
-                        alert(`Wrong answer! Game Over. Your score is $${userScore} Restart`);
-                        location.reload();
-                    }, 400);
-                }
-            }
-    
-        loadQuestion();
-    
-      </script>
-    </body>
-    
-    </html>
+      }
+    }
+
+    function loadQuestion() {
+      if (i < inputQuestion.length) {
+        timeLeft = 20;
+        clearInterval(timer);
+        timer = setInterval(updateTimer, 1000)
+        updateTimer()
+        const currentQuestion = inputQuestion[i];
+
+        optA = currentQuestion.optionA
+        optB = currentQuestion.optionB
+        optC = currentQuestion.optionC
+        optD = currentQuestion.optionD
+        correctAnswer = currentQuestion.answer
+        const questionText = currentQuestion.question
+
+        document.getElementById("mainQuestion").textContent = questionText;
+        document.getElementById("optA").textContent = optA;
+        document.getElementById("optB").textContent = optB;
+        document.getElementById("optC").textContent = optC;
+        document.getElementById("optD").textContent = optD;
+
+        mySong.play()
+        document.getElementById("load").style.display = "none";
+        document.getElementById("disp").style.display = "block";
+        document.getElementById("label").style.display = "block";
+
+        document.getElementById("optA").classList.remove("btn-success", "btn-danger");
+        document.getElementById("optB").classList.remove("btn-success", "btn-danger");
+        document.getElementById("optC").classList.remove("btn-success", "btn-danger");
+        document.getElementById("optD").classList.remove("btn-success", "btn-danger");
+        gameEnded = false
+
+        // i++
+      } else {
+        clearInterval(timer);
+        gameEnded = true
+        alert(`Congratulations! You have completed the game.Your score is $${userScore}`);
+        location.reload();
+      }
+    }
+    function checkAnswer(selectedOption) {
+      clearInterval(timer);
+      if (selectedOption === correctAnswer) {
+        document.getElementById(`opt${selectedOption}`).classList.add("btn-success");
+        setTimeout(() => {
+          document.getElementById(`opt${selectedOption}`).classList.remove("btn-success");
+          loadQuestion()
+        }, 300);
+        mySong.pause()
+        mySong2.play();
+        userScore += 100;
+        document.getElementById("disp").innerHTML = `<div class="text-success" style="font-size: 50px;">Score:$${userScore}</div> Time Left: ${timeLeft} Seconds`;
+
+        i++;
+      } else {
+        mySong3.play();
+        mySong.pause();
+        document.getElementById(`opt${selectedOption}`).classList.add("btn-danger");
+        gameEnded = true
+        setTimeout(() => {
+          alert(`Wrong answer! Game Over. Your score is $${userScore} Restart`);
+          location.reload();
+        }, 400);
+      }
+    }
+
+    loadQuestion();
+
+  </script>
+</body>
+
+</html>
