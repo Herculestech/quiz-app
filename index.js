@@ -3,6 +3,7 @@ let userScore = 0
     let timer;
     let timeLeft = 20;
     let gameEnded = false
+    let quizEnded = false
 
     var mySong = new Audio("sound_background.mp3")
     var mySong2 = new Audio("sound_right.mp3")
@@ -195,9 +196,24 @@ let userScore = 0
         mySong.pause();
         mySong3.play();
         if (!gameEnded) {
-          alert(`Time's up! Game Over. Your score is $${userScore}`);
-          location.reload();
-          loadQuestion();
+            const message = document.getElementById("mainQuestion")
+            message.textContent = `Times Up! Game over. Your score is $${userScore}`
+            message.style.fontSize = "24px"
+            message.style.color = "red"
+
+            const restartButton = document.createElement("button")
+            restartButton.textContent = "Restart Quiz"
+            restartButton.classList.add("btn", "btn-primary")
+            restartButton.style.marginTop = "20px"
+            clearInterval(timer)
+            restartButton.addEventListener("click", () => {
+              clearInterval(timer)
+              location.reload()
+            })
+            document.getElementById("disp").appendChild(message)
+            document.getElementById("disp").appendChild(restartButton)
+
+            quizEnded = true
         }
       }
     }
@@ -266,9 +282,20 @@ let userScore = 0
           document.getElementById(`opt${selectedOption}`).classList.add("btn-danger");
           gameEnded = true;
           setTimeout(() => {
-            alert(`Wrong answer! Game Over. Your score is $${userScore}`);
-            location.reload()
-            loadQuestion()
+            const message = document.getElementById("mainQuestion")
+            message.textContent = `Wrong answer! Game over. Your score is $${userScore}`
+            message.style.fontSize = "24px"
+            message.style.color = "red"
+
+            const restartButton = document.createElement("button")
+            restartButton.textContent = "Restart Quiz"
+            restartButton.classList.add("btn", "btn-primary")
+            restartButton.style.marginTop = "20px"
+            restartButton.addEventListener("click", () => {
+              location.reload()
+            })
+            document.getElementById("disp").appendChild(message)
+            document.getElementById("disp").appendChild(restartButton)
           }, 400);
         }
       }
